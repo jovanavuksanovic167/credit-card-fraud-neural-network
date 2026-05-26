@@ -1,0 +1,24 @@
+# Python virtual environment
+.venv/
+venv/
+env/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# JetBrains / DataSpell files
+.idea/
+
+# macOS system files
+.DS_Store
+
+# Dataset
+data/creditcard.csv
+
+# Logs
+*.log
