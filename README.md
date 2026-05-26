@@ -16,7 +16,7 @@ Dataset sadrži transakcije evropskih korisnika kreditnih kartica. Zbog zaštite
 
 ## Struktura projekta
 
-```text
+
 credit-card-fraud-neural-network/
 │
 ├── data/
@@ -28,7 +28,7 @@ credit-card-fraud-neural-network/
 ├── README.md
 ├── LICENSE
 └── .gitignore
-```
+
 
 Napomena: fajl `data/creditcard.csv` nije uključen u GitHub repozitorijum zbog veličine fajla. Dataset je potrebno ručno preuzeti sa Kaggle linka i staviti u folder `data/`.
 
