@@ -12,7 +12,7 @@ U projektu je korišćen javno dostupan dataset **Credit Card Fraud Detection**,
 
 https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
 
-Dataset sadrži transakcije evropskih korisnika kreditnih kartica. Zbog zaštite privatnosti korisnika, većina atributa je anonimizovana i transformisana pomoću PCA metode.
+Dataset obuhvata transakcije izvršene tokom dva dana u septembru 2013. godine i sadrži ukupno 284.807 transakcija, od kojih je 492 označeno kao prevarno. Zbog zaštite privatnosti korisnika, većina atributa je anonimizovana i transformisana pomoću PCA metode.
 
 ## Struktura projekta
 
@@ -64,7 +64,9 @@ data/
 
 
 
-# Pregled faza projekta
+## Pregled faza projekta
+
+
 
 ## 1. Opis problema
 
@@ -172,6 +174,14 @@ Analizirane arhitekture uključivale su:
 * (128, 64) sa većim dropout parametrima,
 * (64, 32) sa manjim learning rate parametrima.
 
+| Model | Skriveni slojevi | Dropout | Learning rate | Validation AUC |
+|---------|---------|---------|---------|---------|
+| Model 1 | (32,16) | 0.3 | 0.001 | 0.9886 |
+| Model 2 | (64,32) | 0.3 | 0.001 | 0.9912 |
+| Model 3 | (128,64) | 0.3 | 0.001 | **0.9917** |
+| Model 4 | (64,32) | 0.5 | 0.001 | 0.9878 |
+| Model 5 | (64,32) | 0.3 | 0.0005 | 0.9912 |
+
 Za svaku konfiguraciju model je treniran pod identičnim uslovima, nakon čega je zabeležena najbolja ostvarena validaciona AUC vrednost.
 
 Rezultati su pokazali da model sa arhitekturom (128, 64), dropout stopom 0.3 i learning rate vrednošću 0.001 ostvaruje najbolje performanse. Ova konfiguracija izabrana je kao završni model za dalju evaluaciju.
@@ -209,6 +219,18 @@ Ukupna tačnost modela iznosi približno `0.97`, ali ovu metriku treba tumačiti
 
 Matrica konfuzije dodatno potvrđuje ovaj zaključak. Model je uspešno prepoznao većinu prevara, ali je istovremeno veliki broj regularnih transakcija klasifikovao kao prevarne. Zbog toga je potrebno analizirati različite pragove klasifikacije kako bi se pronašao bolji odnos između precision i recall metrike.
 
+| Treshold | Precision | Recall | F1-score |
+|----------|--------|--------|--------|
+| 0.10     | 0.0067 | 0.9694 | 0.0133 |
+| 0.20     | 0.0136 | 0.9592 | 0.0269 |
+| 0.30     | 0.0224 | 0.9490 | 0.0438 |
+| 0.50     | 0.0469 | 0.9184 | 0.0892 |
+| 0.70     | 0.0982 | 0.9082 | 0.1773 |
+| 0.80     | 0.1318 | 0.8878 | 0.2296 |
+| 0.90     | 0.1933 | 0.8878 | 0.3175 |
+| 0.95     | 0.3909 | 0.8776 | 0.5409 |
+| 0.99     | 0.6748 | 0.8469 | 0.7511 |
+
 Pri nižim pragovima, kao što su `0.1`, `0.2` i `0.3`, model veoma lako označava transakcije kao prevarne. Zbog toga je recall veoma visok, što znači da model uspeva da pronađe veliki broj stvarnih prevara. Međutim, precision je veoma nizak, jer se veliki broj regularnih transakcija pogrešno označava kao prevara.
 
 Pri standardnom pragu `0.5`, recall iznosi približno `0.918`, što znači da model otkriva oko 92% stvarnih prevara. Međutim, precision je samo oko `0.047`, pa model i dalje generiše veliki broj lažnih alarma.
@@ -220,6 +242,11 @@ Na primer, pri pragu `0.95`, precision raste na približno `0.391`, dok recall o
 Pri pragu `0.99`, precision dodatno raste na približno `0.675`, ali recall opada na približno `0.847`. To znači da model pravi manje lažnih alarma, ali propušta više stvarnih prevara nego pri pragu `0.95`.
 
 Na osnovu ove analize, prag `0.95` predstavlja dobar kompromis između precision i recall metrika. Zbog toga se u nastavku evaluacije koristi prag `0.95` kao izabrani prag klasifikacije.
+
+Na test skupu najbolji model ostvario je:
+
+- ROC-AUC = 0.9790
+- PR-AUC = 0.6959 
 
 ROC-AUC meri sposobnost modela da razlikuje regularne i prevarne transakcije kroz različite pragove klasifikacije.
 
